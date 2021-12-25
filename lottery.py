@@ -15,7 +15,7 @@ class eurojackpot():
       fill = fill_green if 0 <= iteration else fill_red
 
       # define your bar-size here
-      display_border = 10000000
+      display_border = 50000000
           
       # define bar-borders
       roi_in_euro = int(((abs(iteration) * 100) // display_border) // 2)
@@ -76,7 +76,6 @@ class eurojackpot():
           if eq_2 == 2:
             money_earned += 37503867
             self.printProgressBar(money_earned - money_spend)
-            print("\n")
             return f'{(money_earned - money_spend):,}'
 
           elif eq_2 == 1:
