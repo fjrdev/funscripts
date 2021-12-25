@@ -1,17 +1,45 @@
-# how much money would one need have to spend until hitting the eurojackpot [ source https://www.euro-jackpot.net/gewinnverteilung  ]
-# the money of the prize tiers is the average price-money of eurojackpot
+# how much money would one need have to spend until hitting the eurojackpot [ source for prize-money: https://www.euro-jackpot.net/gewinnverteilung ]
 
 from random import randrange as rr
 from colorama import Fore, Style
 
 class eurojackpot():
+
+
+    def printProgressBar(self, iteration):
+
+      # attributes
+      length = 100
+      fill_green = f'{Fore.GREEN}█{Style.RESET_ALL}'
+      fill_red = f'{Fore.RED}█{Style.RESET_ALL}'
+      fill = fill_green if 0 <= iteration else fill_red
+
+      # define your bar-size here
+      display_border = 10000000
+          
+      # define bar-borders
+      roi_in_euro = int(((abs(iteration) * 100) // display_border) // 2)
+      current_earning = fill * 50 if (iteration < -display_border) or (display_border < iteration) else fill * roi_in_euro
+
+      if roi_in_euro == 0:
+          bar = '-' * ((length // 2) - 1) + fill * 1 + '-' * (length // 2)
+      elif iteration < 0:
+          bar = '-' * ((length // 2) - roi_in_euro) + current_earning + '-' * (length // 2)
+      elif 0 < iteration:
+          bar = '-' * (length // 2) + current_earning + '-' * ((length // 2) - roi_in_euro)
+
+      print(f'\r  {-display_border:,}€ |{bar}| {display_border:,}€ | ROI: {iteration:,}€', end = "\r")
+
   
     def __init__(self) -> None:
       
       self.jackpot_numbers = self.getLotteryNumbers()
 
-      print("jackpot_ticket: ", f'{Fore.CYAN}{self.jackpot_numbers}{Style.RESET_ALL}')
-      print("This script will now run until it draws the winning ticket! Then it will display how much money was spend to draw this ticket")
+      print("jackpot ticket: ", f'{Fore.CYAN}{self.jackpot_numbers}{Style.RESET_ALL}')
+      print("This script will now run until it draws the winning ticket and then display how much money was spend to draw this ticket. Smaller winnings will also be recognized.")
+      
+      # init progressBar
+      self.printProgressBar(0)
 
 
     def getLotteryNumbers(self) -> list:
@@ -35,7 +63,6 @@ class eurojackpot():
       lot = []
       money_spend = 0
       money_earned = 0
-      fees = 0.5
 
       while True:
         
@@ -48,19 +75,20 @@ class eurojackpot():
         if eq_1 == 5:
           if eq_2 == 2:
             money_earned += 37503867
-            print("You won the jackpot (37,503,867) And spend", f'{Fore.RED}{money_spend:,}€{Style.RESET_ALL}', "to reach the jackpot")
-            return f'{(money_earned - fees - money_spend):,}'
+            self.printProgressBar(money_earned - money_spend)
+            print("\n")
+            return f'{(money_earned - money_spend):,}'
+
           elif eq_2 == 1:
             money_earned += 486548
-            print("You won ", f'{Fore.GREEN}486,548€{Style.RESET_ALL}!')
+
           elif eq_2 == 0:
             money_earned += 101543
-            print("You won ", f'{Fore.GREEN}101,543€{Style.RESET_ALL}!')
 
         elif eq_1 == 4:
           if eq_2 == 2:
             money_earned += 4092
-            print("You won ", f'{Fore.GREEN}4,092€{Style.RESET_ALL}!')
+          
           elif eq_2 == 1:
             money_earned += 233
           elif eq_2 == 0:
@@ -82,6 +110,8 @@ class eurojackpot():
 
         elif eq_1 == 1 and eq_2 == 2:
           money_earned += 10
+
+        self.printProgressBar(money_earned - money_spend)
 
 
 if __name__ == "__main__":
